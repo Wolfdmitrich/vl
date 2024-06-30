@@ -845,33 +845,6 @@ function init_vlk()
         }
     )
 
-    Tab:AddButton(
-        {
-            Name = "Carry All",
-            Callback = function()
-                local myUsername = players.LocalPlayer.Name
-
-                if teleportBack then
-                    originalCFrame = localHrp.CFrame
-                end
-
-                for _, player in pairs(players:GetPlayers()) do
-                    if player.Name ~= myUsername and not table.find(whitelisted, player.Name) then
-                        for i = 1, 1 do
-                            local ohInstance1 = workspace.CharacterModels[player.Name]
-                            workspace.CharacterModels[myUsername]["Carry"].RemoteEvent:FireServer(ohInstance1)
-                        end
-                        print("Killed " .. player.Name)
-                    end
-                end
-                if teleportBack then
-                    wait(tpWaitTime)
-                    localHrp.CFrame = originalCFrame
-                end
-            end
-        }
-    )
-
     Tab:AddLabel("Server crashers")
 
     Tab:AddButton(
