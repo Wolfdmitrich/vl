@@ -346,121 +346,6 @@ function init_vlk()
             end
         }
     )
-
-    -- STab:AddLabel("Чтобы добавить в вайтлист, выбери игрока в Main")
-
-    -- -- Функция для получения ID пользователя
-    -- -- Объявляем список whitelisted
-    -- local whitelisted = {"Wolfdmitrich", "VadimYtube20", "Wolfdmitrich"}
-
-    -- -- Функция для получения ID пользователя
-    -- function getUserID()
-    --     -- Предположим, что функция getCurrentUserID() возвращает ID текущего пользователя
-    --     -- В реальной ситуации, замените её на соответствующую функцию вашей среды выполнения
-    --     local userID = getCurrentUserID()
-    --     return userID
-    -- end
-
-    -- -- Функция для добавления нового значения в список whitelisted
-    -- function addToWhitelist(newUser)
-    --     -- Проверяем, есть ли уже пользователь в списке
-    --     for _, user in ipairs(whitelisted) do
-    --         if user == newUser then
-    --             print(newUser .. " уже в списке whitelisted.")
-    --             return
-    --         end
-    --     end
-    --     -- Если пользователя нет в списке, добавляем его
-    --     table.insert(whitelisted, newUser)
-    --     print(newUser .. " добавлен в список whitelisted.")
-    -- end
-
-    -- -- Функция для удаления пользователя из списка whitelisted
-    -- function removeFromWhitelist(userToRemove)
-    --     for index, user in ipairs(whitelisted) do
-    --         if user == userToRemove then
-    --             table.remove(whitelisted, index)
-    --             print(userToRemove .. " удалён из списка whitelisted.")
-    --             return
-    --         end
-    --     end
-
-    --     local OrionLib = loadstring(game:HttpGet(("https://raw.githubusercontent.com/shlexware/Orion/main/source")))()
-    --     OrionLib:MakeNotification(
-    --         {
-    --             Name = "Error",
-    --             Content = "Пользователь " .. userToRemove .. " не найден в вайтлисте",
-    --             Image = "rbxassetid://4483345998",
-    --             Time = 5
-    --         }
-    --     )
-    -- end
-
-    -- -- Пример добавления кнопок для управления вайтлистом
-    -- STab:AddButton(
-    --     {
-    --         Name = "Add Player To Whitelist",
-    --         Callback = function()
-    --             if getUserID() == 3205762513 then
-    --                 addToWhitelist(playerName)
-    --                 local OrionLib =
-    --                     loadstring(game:HttpGet(("https://raw.githubusercontent.com/shlexware/Orion/main/source")))()
-    --                 OrionLib:MakeNotification(
-    --                     {
-    --                         Name = "Good",
-    --                         Content = "You added player " .. playerName .. " to whitelist",
-    --                         Image = "rbxassetid://4483345998",
-    --                         Time = 5
-    --                     }
-    --                 )
-    --             else
-    --                 local OrionLib =
-    --                     loadstring(game:HttpGet(("https://raw.githubusercontent.com/shlexware/Orion/main/source")))()
-    --                 OrionLib:MakeNotification(
-    --                     {
-    --                         Name = "Error",
-    --                         Content = "You haven't got perms to do it",
-    --                         Image = "rbxassetid://4483345998",
-    --                         Time = 5
-    --                     }
-    --                 )
-    --             end
-    --         end
-    --     }
-    -- )
-
-    -- STab:AddButton(
-    --     {
-    --         Name = "Remove Player From Whitelist",
-    --         Callback = function()
-    --             if getUserID() == 3205762513 then
-    --                 removeFromWhitelist(playerName)
-    --                 local OrionLib =
-    --                     loadstring(game:HttpGet(("https://raw.githubusercontent.com/shlexware/Orion/main/source")))()
-    --                 OrionLib:MakeNotification(
-    --                     {
-    --                         Name = "Good",
-    --                         Content = "You removed player " .. playerName .. " from whitelist",
-    --                         Image = "rbxassetid://4483345998",
-    --                         Time = 5
-    --                     }
-    --                 )
-    --             else
-    --                 local OrionLib =
-    --                     loadstring(game:HttpGet(("https://raw.githubusercontent.com/shlexware/Orion/main/source")))()
-    --                 OrionLib:MakeNotification(
-    --                     {
-    --                         Name = "Error",
-    --                         Content = "You haven't got perms to do it",
-    --                         Image = "rbxassetid://4483345998",
-    --                         Time = 5
-    --                     }
-    --                 )
-    --             end
-    --         end
-    --     }
-    -- )
-
     updatePlayerNames()
 
     Tab:AddButton(
@@ -982,6 +867,80 @@ function init_vlk()
                 if teleportBack then
                     wait(tpWaitTime)
                     localHrp.CFrame = originalCFrame
+                end
+            end
+        }
+    )
+
+    Tab:AddLabel("Server crashers")
+
+    Tab:AddButton(
+        {
+            Name = "Crash server",
+            Callback = function()
+                local players = game:GetService("Players")
+                local myUsername = players.LocalPlayer.Name
+
+                OLib:MakeNotification(
+                    {
+                        Name = "Server crasher",
+                        Content = "Trying to crash server...\nMethod: Players",
+                        Image = "rbxassetid://4483345998",
+                        Time = 5
+                    }
+                )
+
+                local running = true
+                while running do
+                    for _, player in pairs(players:GetPlayers()) do
+                        if player.Name ~= myUsername and not table.find(whitelisted, player.Name) then
+                            pcall(
+                                function()
+                                    for i = 1, 50 do
+                                        local ohInstance1 = workspace.CharacterModels[player.Name]
+                                        workspace.CharacterModels[myUsername]["Snap Neck"].RemoteEvent:FireServer(
+                                            ohInstance1
+                                        )
+                                        print("Killed " .. player.Name)
+                                    end
+                                end
+                            )
+                        end
+                    end
+                    wait(0.1) -- To avoid infinite loop freeze
+                end
+            end
+        }
+    )
+
+    Tab:AddButton(
+        {
+            Name = "Crash server through villagers",
+            Callback = function()
+                local players = game:GetService("Players")
+                local myUsername = players.LocalPlayer.Name
+
+                OLib:MakeNotification(
+                    {
+                        Name = "Server crasher",
+                        Content = "Trying to crash server...\nMethod: Villagers",
+                        Image = "rbxassetid://4483345998",
+                        Time = 5
+                    }
+                )
+
+                local running = true
+                while running do
+                    pcall(
+                        function()
+                            for i = 1, 50 do
+                                local ohInstance1 = workspace.CharacterModels.Villager
+                                workspace.CharacterModels[myUsername]["Snap Neck"].RemoteEvent:FireServer(ohInstance1)
+                                print("Killed Villager")
+                            end
+                        end
+                    )
+                    wait(0.1) -- To avoid infinite loop freeze
                 end
             end
         }
