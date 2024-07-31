@@ -119,7 +119,7 @@ function init_vlk()
     local function updatePlayerNames()
         playerNames = {}
         for _, player in pairs(players:GetPlayers()) do
-            table.insert(playerNames, player.Name)
+            table.insert(playerNames, player.DisplayName .. " (@" .. player.Name .. ")")
         end
         if playerDropdown then
             playerDropdown:Refresh(playerNames, true)
@@ -132,8 +132,13 @@ function init_vlk()
             Name = "Players",
             Default = "Select player",
             Options = playerNames,
-            Callback = function(PlayerUsername)
-                playerName = PlayerUsername
+            Callback = function(PlayerDisplayAndUsername)
+                for _, player in pairs(players:GetPlayers()) do
+                    if PlayerDisplayAndUsername == player.DisplayName .. " (@" .. player.Name .. ")" then
+                        playerName = player.Name
+                        break
+                    end
+                end
             end
         }
     )
@@ -149,10 +154,10 @@ function init_vlk()
                 for _, player in pairs(players:GetPlayers()) do
                     if string.find(string.lower(player.Name), string.lower(inputPlayerName)) then
                         playerName = player.Name
-                        OLib:MakeNotification(
+                        OrionLib:MakeNotification(
                             {
                                 Name = "Player Found",
-                                Content = "Player " .. playerName .. " selected.",
+                                Content = "Player " .. player.DisplayName .. " (@" .. player.Name .. ") selected.",
                                 Image = "rbxassetid://4483345998",
                                 Time = 5
                             }
@@ -163,6 +168,54 @@ function init_vlk()
             end
         }
     )
+
+    -- local function updatePlayerNames()
+    --     playerNames = {}
+    --     for _, player in pairs(players:GetPlayers()) do
+    --         table.insert(playerNames, player.Name)
+    --     end
+    --     if playerDropdown then
+    --         playerDropdown:Refresh(playerNames, true)
+    --     end
+    -- end
+
+    -- playerDropdown =
+    --     Tab:AddDropdown(
+    --     {
+    --         Name = "Players",
+    --         Default = "Select player",
+    --         Options = playerNames,
+    --         Callback = function(PlayerUsername)
+    --             playerName = PlayerUsername
+    --         end
+    --     }
+    -- )
+
+    -- local inputPlayerName
+    -- Tab:AddTextbox(
+    --     {
+    --         Name = "Player Name",
+    --         Default = "",
+    --         TextDisappear = false,
+    --         Callback = function(Value)
+    --             inputPlayerName = Value
+    --             for _, player in pairs(players:GetPlayers()) do
+    --                 if string.find(string.lower(player.Name), string.lower(inputPlayerName)) then
+    --                     playerName = player.Name
+    --                     OLib:MakeNotification(
+    --                         {
+    --                             Name = "Player Found",
+    --                             Content = "Player " .. playerName .. " selected.",
+    --                             Image = "rbxassetid://4483345998",
+    --                             Time = 5
+    --                         }
+    --                     )
+    --                     break
+    --                 end
+    --             end
+    --         end
+    --     }
+    -- )
 
     STab:AddToggle(
         {
