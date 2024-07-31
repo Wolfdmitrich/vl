@@ -154,7 +154,7 @@ function init_vlk()
                 for _, player in pairs(players:GetPlayers()) do
                     if string.find(string.lower(player.Name), string.lower(inputPlayerName)) then
                         playerName = player.Name
-                        OrionLib:MakeNotification(
+                        AOLib:MakeNotification(
                             {
                                 Name = "Player Found",
                                 Content = "Player " .. player.DisplayName .. " (@" .. player.Name .. ") selected.",
